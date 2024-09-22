@@ -24,13 +24,13 @@ const schema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["ADMIN", "UserUSER"],
+        enum: ["ADMIN", "USER"],
         default: "USER"
     },
 },
     { timestamps: true }
 )
 
-const model = mongoose.model('User', schema)
+const model = mongoose.model('users', schema)
 
 module.exports = model

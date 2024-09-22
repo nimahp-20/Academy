@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
         })
     }
 
-    const countOfUsers = await userModel.count()
+    const countOfUsers = await userModel.countDocuments()
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
@@ -34,11 +34,15 @@ exports.register = async (req, res) => {
         role: countOfUsers > 0 ? "USER" : "ADMIN"
     })
 
-    const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        exoireIn: "30 day"
+    const userObject = user.toObject()
+    Reflect.deleteProperty(userObject, 'password')
+
+
+    const accessToken = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "30 day"
     })
 
-    return res.status(201).json({ user, accessToken })
+    return res.status(201).json({ user: userObject, accessToken })
 }
 
 exports.login = async (req, res) => {
