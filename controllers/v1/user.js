@@ -11,3 +11,9 @@ exports.banUser = async (req, res) => {
     }
     return res.status(500).json({message: 'Server Error !!'})
 }
+
+
+exports.getAll = async (req, res) => {
+    const users = await userModel.find({})
+    return res.json(users)
+}

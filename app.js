@@ -16,6 +16,6 @@ app.use(bodyParser.json())
 
 
 app.use('/v1/auth', authRouter)
-app.use('/v1/user', usersRouter)
+app.use('/v1/users', usersRouter)
 
 module.exports = app
