@@ -11,4 +11,5 @@ const schema = new mongoose.Schema({
 
 const model = mongoose.model('BanUser', schema)
 
+
 module.exports = model
