@@ -2,22 +2,34 @@ const userModel = require('../../models/user')
 const registerValidator = require('./../../validators/register')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
+const userBanModel = require('./../../models/banPhone')
 
 exports.register = async (req, res) => {
     const validationResult = registerValidator(req.body)
+
+
     if (validationResult !== true) {
         return res.status(422).json(validationResult)
     }
-    const { username, name, email, password, phone } = req.body
+
+
+    const {username, name, email, password, phone} = req.body
 
     const isUserExists = await userModel.findOne({
-        $or: [{ username }, { email }]
+        $or: [{username}, {email}]
     })
 
     if (isUserExists) {
         return res.status(409).json({
             message: 'username or email is duplicated'
+        })
+    }
+
+    const isUserBan = await userBanModel.find({phone})
+
+    if (isUserBan.length) {
+        return res.status(409).json({
+            message: "This phone number is ban"
         })
     }
 
@@ -38,11 +50,11 @@ exports.register = async (req, res) => {
     Reflect.deleteProperty(userObject, 'password')
 
 
-    const accessToken = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const accessToken = await jwt.sign({id: user._id}, process.env.JWT_SECRET, {
         expiresIn: "30 day"
     })
 
-    return res.status(201).json({ user: userObject, accessToken })
+    return res.status(201).json({user: userObject, accessToken})
 }
 
 exports.login = async (req, res) => {
