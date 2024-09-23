@@ -4,8 +4,8 @@ const controller = require('../../controllers/v1/auth')
 
 const router = express.Router()
 
-router.post('/register',controller.register)
-router.post('/login',controller.login)
-router.get('/me',controller.getMe)
+router.post('/register', controller.register)
+router.post('/login', controller.login)
+router.get('/me', controller.getMe)
 
 module.exports = router
