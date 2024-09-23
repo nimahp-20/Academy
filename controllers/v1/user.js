@@ -13,7 +13,6 @@ exports.banUser = async (req, res) => {
     return res.status(500).json({message: 'Server Error !!'})
 }
 
-
 exports.getAll = async (req, res) => {
     const users = await userModel.find({}).lean()
 
@@ -45,4 +44,46 @@ exports.deleteUser = async (req, res) => {
         message: "userDeleted Successfully"
     })
 
+}
+
+exports.changeRole = async (req, res) => {
+    const {id} = req.body
+    const isValidId = isValidObjectId(id)
+
+    try {
+        const user = await userModel.findOne({_id: id});
+
+        if (!isValidId) {
+            return res.status(409).json({
+                message: 'UserId not valid'
+            })
+        }
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        let newRole = user.role === "ADMIN" ? "USER" : "ADMIN";
+
+        const updatedUser = await userModel.findByIdAndUpdate({_id: id}, {
+            role: newRole
+        })
+
+        if (updatedUser) {
+            return res.json({
+                message: "User role changed successfully",
+            });
+        }
+
+        // console.log(newRole);
+
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "An error occurred",
+            error: error.message
+        });
+    }
 }
