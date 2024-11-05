@@ -54,6 +54,10 @@ exports.update = async (req, res) => {
         {title, href},
         {new: true}
     ).lean()
+    if(!updateCategory)
+        return  res.status(422).json({
+            message:'Category not found'
+        })
     return res.json(updateCategory)
 
 }
