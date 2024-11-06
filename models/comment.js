@@ -37,4 +37,4 @@ const schema = new mongoose.Schema({
     {timestamps: true}
 )
 const model = mongoose.model('Comment', schema)
-module.exports(model)
+module.exports = model

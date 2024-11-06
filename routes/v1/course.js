@@ -13,4 +13,16 @@ router.route('/').post(multer({
     }).single("cover"),
     authMiddleWare, isAdminMiddleWare, coursesController.create)
 
+router.route('/:id/sessions').post(
+    // multer({
+    //     storage: multerStorage,
+    //     limits: {fileSize: 100000000}
+    // }).single("video"),
+    authMiddleWare,
+    isAdminMiddleWare,
+    coursesController.createSession
+)
+
+router.route('/sessions').get(coursesController.getAllSessions)
+
 module.exports = router

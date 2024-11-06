@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const schema = mongoose.Schema({
+const schema = new mongoose.Schema({
         title: {
             type: String,
             required: true,
@@ -19,7 +19,7 @@ const schema = mongoose.Schema({
         },
         course: {
             type: mongoose.Schema.Types.ObjectID,
-            ref: 'Course '
+            ref: 'Course'
         },
     },
     {timestamps: true}
@@ -27,4 +27,4 @@ const schema = mongoose.Schema({
 
 const model = mongoose.model('Session', schema)
 
-module.exports(model)
+module.exports = model
