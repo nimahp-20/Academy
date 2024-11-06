@@ -18,7 +18,7 @@ const schema = mongoose.Schema({
             required: true,
         },
         course: {
-            type: mongoose.Types.ObjectID,
+            type: mongoose.Schema.Types.ObjectID,
             ref: 'Course '
         },
     },

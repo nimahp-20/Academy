@@ -1,18 +1,17 @@
 const mongoose = require('mongoose')
-const {mongo} = require("mongoose");
 
-const schema = mongoose.Schema({
+const schema = new mongoose.Schema({
         body: {
             type: String,
             required: true,
         },
         course: {
-            type: mongoose.Types.ObjectID,
+            type: mongoose.Schema.Types.ObjectID,
             ref: 'Course',
             required: true
         },
         user: {
-            type: mongo.Types.ObjectID,
+            type: mongoose.Schema.Types.ObjectID,
             ref: 'User',
             required: true
         },
@@ -31,7 +30,7 @@ const schema = mongoose.Schema({
             required: true
         },
         mainCommentId: {
-            type: mongoose.Types.ObjectID,
+            type: mongoose.Schema.Types.ObjectID,
             ref: 'Comment',
         }
     },

@@ -31,6 +31,6 @@ const schema = new mongoose.Schema({
     { timestamps: true }
 )
 
-const model = mongoose.model('users', schema)
+const model = mongoose.model('User', schema)
 
 module.exports = model
