@@ -12,6 +12,7 @@ router.route('/').post(multer({
         limits: {fileSize: 100000000}
     }).single("cover"),
     authMiddleWare, isAdminMiddleWare, coursesController.create)
+router.route('/:href/:sessionID').get(coursesController.getSessionInfo)
 
 router.route('/:id/sessions').post(
     // multer({
@@ -24,5 +25,6 @@ router.route('/:id/sessions').post(
 )
 
 router.route('/sessions').get(coursesController.getAllSessions)
+
 
 module.exports = router

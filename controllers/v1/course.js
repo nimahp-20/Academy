@@ -47,8 +47,17 @@ exports.createSession = async (req, res) => {
 }
 
 exports.getAllSessions = async (req, res) => {
-    const sessions = await sessionModel.find().populate('course').lean()
+    const sessions = await sessionModel.find({}).populate('course').lean()
 
     return res.status(200).json(sessions)
 
+}
+
+exports.getSessionInfo = async (req, res) => {
+    const course = await courseModel.findOne({href: req.params.href})
+    const session = await sessionModel.findOne({_id: req.params.sessionID})
+
+    const sessions = await sessionModel.find({course: course._id})
+
+    return res.status(200).json({session, sessions})
 }
