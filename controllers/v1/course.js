@@ -53,19 +53,24 @@ exports.getAllSessions = async (req, res) => {
 
 }
 
-exports.getSessionInfo = async (req, res) =>
+exports.getSessionInfo = async (req, res) => {
+    const course = await courseModel.findOne({href: req.params.href})
+    const session = await sessionModel.findOne({_id: req.params.sessionID})
+
+    const sessions = await sessionModel.find({course: course._id})
+
+    return res.status(200).json({session, sessions})
+}
 
 exports.removeSession = async (req, res) => {
-    const deletedCourse = await sessionModel.findOneAndDelete({_id: req.params.id})
-
-    if (deletedCourse) {
-        return res.status(200).json({deletedCourse})
-    } else {
-        return res.status(404).json(
-            {
-                message: 'course not found'
-            }
-        )
-
+    try {
+        const deletedCourse = await sessionModel.findOneAndDelete({_id: req.params.id});
+        if (deletedCourse) {
+            return res.status(200).json(deletedCourse);
+        } else {
+            return res.status(404).json({message: 'Course not found'});
+        }
+    } catch (error) {
+        return res.status(500).json({message: 'Internal Server Error', error: error.message});
     }
-}
+};
