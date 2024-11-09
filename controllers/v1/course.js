@@ -54,12 +54,12 @@ exports.getAllSessions = async (req, res) => {
 }
 
 exports.getSessionInfo = async (req, res) =>
-    
+
 exports.removeSession = async (req, res) => {
     const deletedCourse = await sessionModel.findOneAndDelete({_id: req.params.id})
 
     if (deletedCourse) {
-        return res.status(200).json(deletedCourse)
+        return res.status(200).json({deletedCourse})
     } else {
         return res.status(404).json(
             {
