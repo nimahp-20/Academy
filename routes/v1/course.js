@@ -8,23 +8,19 @@ const isAdminMiddleWare = require('./../../middlewares/isAdmin')
 const router = express.Router()
 
 router.route('/').post(multer({
-        storage: multerStorage,
-        limits: {fileSize: 100000000}
-    }).single("cover"),
-    authMiddleWare, isAdminMiddleWare, coursesController.create)
-router.route('/:href/:sessionID').get(coursesController.getSessionInfo)
+    storage: multerStorage, limits: {fileSize: 100000000}
+}).single("cover"), authMiddleWare, isAdminMiddleWare, coursesController.create)
 
-router.route('/:id/sessions').post(
-    // multer({
+router.route('/:id/sessions').post(// multer({
     //     storage: multerStorage,
     //     limits: {fileSize: 100000000}
     // }).single("video"),
-    authMiddleWare,
-    isAdminMiddleWare,
-    coursesController.createSession
-)
+    authMiddleWare, isAdminMiddleWare, coursesController.createSession)
+router.route('/:href/:sessionID').get(coursesController.getSessionInfo)
 
 router.route('/sessions').get(coursesController.getAllSessions)
+
+router.route('/sessions/:id').delete(authMiddleWare, isAdminMiddleWare, coursesController.removeSession)
 
 
 module.exports = router

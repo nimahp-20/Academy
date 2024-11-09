@@ -53,11 +53,19 @@ exports.getAllSessions = async (req, res) => {
 
 }
 
-exports.getSessionInfo = async (req, res) => {
-    const course = await courseModel.findOne({href: req.params.href})
-    const session = await sessionModel.findOne({_id: req.params.sessionID})
+exports.getSessionInfo = async (req, res) =>
+    
+exports.removeSession = async (req, res) => {
+    const deletedCourse = await sessionModel.findOneAndDelete({_id: req.params.id})
 
-    const sessions = await sessionModel.find({course: course._id})
+    if (deletedCourse) {
+        return res.status(200).json(deletedCourse)
+    } else {
+        return res.status(404).json(
+            {
+                message: 'course not found'
+            }
+        )
 
-    return res.status(200).json({session, sessions})
+    }
 }
