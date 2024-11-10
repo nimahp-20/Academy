@@ -16,6 +16,7 @@ router.route('/:id/sessions').post(// multer({
     //     limits: {fileSize: 100000000}
     // }).single("video"),
     authMiddleWare, isAdminMiddleWare, coursesController.createSession)
+router.route('/category/:href').get(coursesController.getCoursesByCategory)
 
 router.route('/:href/:sessionID').get(coursesController.getSessionInfo)
 
@@ -24,5 +25,6 @@ router.route('/sessions').get(coursesController.getAllSessions)
 router.route('/sessions/:id').delete(authMiddleWare, isAdminMiddleWare, coursesController.removeSession);
 
 router.route("/:id/register").post(authMiddleWare, coursesController.register)
+
 
 module.exports = router
