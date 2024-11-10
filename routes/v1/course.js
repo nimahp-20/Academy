@@ -23,6 +23,6 @@ router.route('/sessions').get(coursesController.getAllSessions)
 
 router.route('/sessions/:id').delete(authMiddleWare, isAdminMiddleWare, coursesController.removeSession);
 
-
+router.route("/:id/register").post(authMiddleWare, coursesController.register)
 
 module.exports = router

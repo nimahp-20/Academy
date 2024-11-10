@@ -1,4 +1,5 @@
 const courseModel = require('./../../models/course')
+const courseUserModel = require('./../../models/course-user')
 const sessionModel = require('./../../models/session')
 
 exports.create = async (req, res) => {
@@ -69,6 +70,32 @@ exports.removeSession = async (req, res) => {
             return res.status(200).json(deletedCourse);
         } else {
             return res.status(404).json({message: 'Course not found'});
+        }
+    } catch (error) {
+        return res.status(500).json({message: 'Internal Server Error', error: error.message});
+    }
+};
+
+exports.register = async (req, res) => {
+    try {
+        const isUserAlreadyRegister = await courseUserModel.findOne({
+            user: req.user._id,
+            course: req.params.id
+        }).lean()
+        if (isUserAlreadyRegister) {
+            return res.status(409).json({
+                message: "userAlreadyRegister",
+            })
+        } else {
+            const register = await courseUserModel.create({
+                user: req.user._id,
+                course: req.params.id,
+                price: req.body.price
+            })
+            return res.status(201).json({
+                message: 'Your register Done',
+                data: register
+            })
         }
     } catch (error) {
         return res.status(500).json({message: 'Internal Server Error', error: error.message});
