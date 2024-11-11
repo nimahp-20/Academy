@@ -17,7 +17,7 @@ router.route('/:id/sessions').post(// multer({
     // }).single("video"),
     authMiddleWare, isAdminMiddleWare, coursesController.createSession)
 
-router.route('/:href').get(coursesController.getOneCourse)
+router.route('/:href').get(authMiddleWare, coursesController.getOneCourse)
 
 router.route('/category/:href').get(coursesController.getCoursesByCategory)
 

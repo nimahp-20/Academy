@@ -123,11 +123,17 @@ exports.getOneCourse = async (req, res, next) => {
 
         const courseStudentsCount = await courseUserModel.find({course: course._id}).countDocuments()
 
+        const isUserRegisterToThisCourse = !!(await courseUserModel.findOne({
+            user: req.user._id,
+            course: course._id
+        }))
+
         return res.json({
             course: course,
             sessions: sessions,
             comments: comments,
-            courseStudentsCount: courseStudentsCount
+            courseStudentsCount: courseStudentsCount,
+            isUserRegister: isUserRegisterToThisCourse
         })
     } catch (error) {
         return res.status(500).json({message: 'Internal Server Error', error: error.message});
