@@ -3,6 +3,7 @@ const courseUserModel = require('./../../models/course-user')
 const sessionModel = require('./../../models/session')
 const categoryModel = require('./../../models/category')
 const commentModel = require('./../../models/comment')
+const mongoose = require("mongoose");
 
 exports.create = async (req, res) => {
     const {name, description, support, href, price, status, discount, categoryId} = req.body;
@@ -45,7 +46,7 @@ exports.createSession = async (req, res) => {
 
 exports.getAllSessions = async (req, res) => {
     const sessions = await sessionModel.find({}).populate('course').lean()
-
+    console.log(sessions)
     return res.status(200).json(sessions)
 
 }
@@ -135,6 +136,32 @@ exports.getOneCourse = async (req, res, next) => {
             courseStudentsCount: courseStudentsCount,
             isUserRegister: isUserRegisterToThisCourse
         })
+    } catch (error) {
+        return res.status(500).json({message: 'Internal Server Error', error: error.message});
+    }
+};
+
+exports.remove = async (req, res, next) => {
+    try {
+        const isObjectIdValid = mongoose.Types.ObjectId.isValid(req.params.id)
+        const deletedCourse = await courseModel.findOneAndDelete({_id: req.params.id})
+
+        if (!isObjectIdValid) {
+            return res.status(409).json({
+                message: "CourseId is not valid"
+            })
+        }
+
+        if (deletedCourse) {
+            return res.status(200).json({
+                message: "Course Deleted successfully",
+                deletedCourse: deletedCourse
+            })
+        } else {
+            res.status(404).json({
+                message: "course not found"
+            })
+        }
     } catch (error) {
         return res.status(500).json({message: 'Internal Server Error', error: error.message});
     }

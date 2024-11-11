@@ -11,6 +11,8 @@ router.route('/').post(multer({
     storage: multerStorage, limits: {fileSize: 100000000}
 }).single("cover"), authMiddleWare, isAdminMiddleWare, coursesController.create)
 
+router.route('/sessions').get(coursesController.getAllSessions)
+
 router.route('/:id/sessions').post(// multer({
     //     storage: multerStorage,
     //     limits: {fileSize: 100000000}
@@ -19,11 +21,12 @@ router.route('/:id/sessions').post(// multer({
 
 router.route('/:href').get(authMiddleWare, coursesController.getOneCourse)
 
+router.route('/:id').delete(authMiddleWare,isAdminMiddleWare, coursesController.remove)
+
 router.route('/category/:href').get(coursesController.getCoursesByCategory)
 
 router.route('/:href/:sessionID').get(coursesController.getSessionInfo)
 
-router.route('/sessions').get(coursesController.getAllSessions)
 
 router.route('/sessions/:id').delete(authMiddleWare, isAdminMiddleWare, coursesController.removeSession);
 
