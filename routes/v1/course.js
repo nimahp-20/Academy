@@ -16,6 +16,9 @@ router.route('/:id/sessions').post(// multer({
     //     limits: {fileSize: 100000000}
     // }).single("video"),
     authMiddleWare, isAdminMiddleWare, coursesController.createSession)
+
+router.route('/:href').get(coursesController.getOneCourse)
+
 router.route('/category/:href').get(coursesController.getCoursesByCategory)
 
 router.route('/:href/:sessionID').get(coursesController.getSessionInfo)

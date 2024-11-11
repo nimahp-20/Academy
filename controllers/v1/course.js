@@ -2,14 +2,13 @@ const courseModel = require('./../../models/course')
 const courseUserModel = require('./../../models/course-user')
 const sessionModel = require('./../../models/session')
 const categoryModel = require('./../../models/category')
-const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
+const commentModel = require('./../../models/comment')
 
 exports.create = async (req, res) => {
-    const { name, description, support, href, price, status, discount, categoryId } = req.body;
+    const {name, description, support, href, price, status, discount, categoryId} = req.body;
 
     if (!req.file) {
-        return res.status(400).json({ message: "Cover image is required" });
+        return res.status(400).json({message: "Cover image is required"});
     }
 
     try {
@@ -29,7 +28,7 @@ exports.create = async (req, res) => {
         const mainCourse = await courseModel.findById(course._id).populate('creator', '-password');
         return res.status(201).json(mainCourse);
     } catch (error) {
-        return res.status(500).json({ message: 'Internal Server Error', error: error.message });
+        return res.status(500).json({message: 'Internal Server Error', error: error.message});
     }
 };
 
@@ -97,7 +96,7 @@ exports.register = async (req, res) => {
 exports.getCoursesByCategory = async (req, res) => {
     try {
 
-        const category = await categoryModel.findOne({href:req.params.href});
+        const category = await categoryModel.findOne({href: req.params.href});
 
         if (category) {
             console.log(category._id)
@@ -106,6 +105,30 @@ exports.getCoursesByCategory = async (req, res) => {
         } else {
             return res.json([]);
         }
+    } catch (error) {
+        return res.status(500).json({message: 'Internal Server Error', error: error.message});
+    }
+};
+
+exports.getOneCourse = async (req, res, next) => {
+    try {
+        const course = await courseModel.findOne({href: req.params.href}).select('-__v')
+            .populate('creator', '-password -__v')
+            .populate('categoryId', '-__v')
+
+
+        const sessions = await sessionModel.find({course: course._id}).lean().select('-__v')
+        const comments = await commentModel.find({course: course._id, isAccept: true}).select('-__v')
+            .populate('user', '-password -__v')
+
+        const courseStudentsCount = await courseUserModel.find({course: course._id}).countDocuments()
+
+        return res.json({
+            course: course,
+            sessions: sessions,
+            comments: comments,
+            courseStudentsCount: courseStudentsCount
+        })
     } catch (error) {
         return res.status(500).json({message: 'Internal Server Error', error: error.message});
     }
